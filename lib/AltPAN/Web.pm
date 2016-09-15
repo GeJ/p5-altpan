@@ -5,6 +5,12 @@ use warnings;
 use utf8;
 use Kossy;
 
+use File::Copy ();
+use File::Spec;
+use File::Temp ();
+use OrePAN2::Indexer;
+use OrePAN2::Injector;
+
 filter 'set_title' => sub {
     my $app = shift;
     sub {
@@ -19,17 +25,30 @@ get '/' => [qw/set_title/] => sub {
     $c->render('index.tx', { greeting => "Hello" });
 };
 
-get '/json' => sub {
-    my ( $self, $c )  = @_;
-    my $result = $c->req->validator([
-        'q' => {
-            default => 'Hello',
-            rule => [
-                [['CHOICE',qw/Hello Bye/],'Hello or Bye']
-            ],
+post '/authenquery' => sub {
+    my ($self, $c) = @_;
+
+    my ($module, $author);
+    my $tempdir = File::Temp::tempdir(CLEANUP => 1);
+    if (my $upload = $c->req->('pause99_add_uri_httpupload')) {
+        $module = File::Spec->catfile($tempdir, $upload->filename);
+        File::Copy::move $upload->tempname, $module;
+        $author = $req->param('HIDDENNAME');
+    }
+    else {
+        $module = $req->param('module');
+        $author = $req->param('author') || 'DUMMY';
+    }
+    $c->halt(404) if ($module && 
+
+    my $injector = OrePAN2::Injector->new(
+            directory => $directory,
+            author    => $author,
+        );
+    $injector->inject($module);
+    OrePAN2::Indexer->new(directory => $directory)
+        ->make_index(no_compress => !$compress_index);
         }
-    ]);
-    $c->render_json({ greeting => $result->valid->get('q') });
 };
 
 1;

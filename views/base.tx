@@ -1,48 +1,53 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html" charset="utf-8">
-<title>AltPAN</title>
-<link rel="shortcut icon" href="<: $c.req.uri_for('/favicon.ico') :>" type="image/vnd.microsoft.icon" />
-<link rel="stylesheet" href="<: $c.req.uri_for('/css/bootstrap.min.css') :>">
-<style>
-body {
-  padding-top: 60px;
-}
-</style>
-<link rel="stylesheet" href="<: $c.req.uri_for('/css/bootstrap-responsive.min.css') :>">
-</head>
-<body>
-
-<div class="navbar navbar-fixed-top">
-<div class="navbar-inner">
-<div class="container">
-<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-<span class="icon-bar"></span>
-<span class="icon-bar"></span>
-<span class="icon-bar"></span>
-</a>
-<a class="brand" href="<: $c.req.uri_for('/') :>">AltPAN</a>
-<div class="nav-collapse">
-<ul class="nav">
-<li class="active"><a href="<: $c.req.uri_for('/') :>">Home</a></li>
-<li><a href="#about">About</a></li>
-<li><a href="#contact">Contact</a></li>
-</ul>
-</div> <!--/.nav-collapse -->
-</div>
-</div>
-</div>
-
-<div class="container">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>AltPAN</title>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/vnd.microsoft.icon" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <!-- Per page CSS -->
+: block stylesheets -> { }
+    <style>
+    body {
+      padding-top: 60px;
+    }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">AltPAN</a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbar-collapse-1">
+: if ($stash.is_admin) {
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Administration<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="/admin/register">Ajouter un utilisateur</a></li>
+              </ul>
+            </li>
+          </ul>
+: }
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/logout">Quitter</a></li>
+          </ul>
+        </div> <!--/.nav-collapse -->
+      </div>
+    </nav>
+    <div class="container">
 
 : block content -> { }
 
-</div> <!-- /container -->
+    </div> <!-- /container -->
 
-<script type="text/javascript" src="<: $c.req.uri_for('/js/jquery.min.js') :>"></script>
-<script type="text/javascript" src="<: $c.req.uri_for('/js/bootstrap.min.js') :>"></script>
-</body>
+    <script type="text/javascript" src="/js/jquery-1.12.3.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+  </body>
 </html>
 
 
