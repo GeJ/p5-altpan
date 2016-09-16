@@ -1,5 +1,6 @@
 package AltPAN::Web;
 
+use 5.010001;
 use strict;
 use warnings;
 use utf8;
@@ -10,6 +11,17 @@ use File::Spec;
 use File::Temp ();
 use OrePAN2::Indexer;
 use OrePAN2::Injector;
+use Try::Tiny;
+
+sub dist_dir { # {{{
+    my $self = shift;
+    state $dist_dir ||= do {
+        my $dir = $ENV{ALTPAN_DISTDIR} // File::Spec->catdir($self->root_dir, 'altpan');
+        Carp::croak("Distribution repository does not exist")
+            unless (-d $dir);
+        $dir;
+    };
+} # }}}
 
 filter 'set_title' => sub {
     my $app = shift;
@@ -28,27 +40,32 @@ get '/' => [qw/set_title/] => sub {
 post '/authenquery' => sub {
     my ($self, $c) = @_;
 
-    my ($module, $author);
-    my $tempdir = File::Temp::tempdir(CLEANUP => 1);
-    if (my $upload = $c->req->('pause99_add_uri_httpupload')) {
-        $module = File::Spec->catfile($tempdir, $upload->filename);
-        File::Copy::move $upload->tempname, $module;
-        $author = $req->param('HIDDENNAME');
-    }
-    else {
-        $module = $req->param('module');
-        $author = $req->param('author') || 'DUMMY';
-    }
-    $c->halt(404) if ($module && 
-
-    my $injector = OrePAN2::Injector->new(
-            directory => $directory,
-            author    => $author,
-        );
-    $injector->inject($module);
-    OrePAN2::Indexer->new(directory => $directory)
-        ->make_index(no_compress => !$compress_index);
+    try {
+        my ($module, $author);
+        my $tempdir = File::Temp::tempdir(CLEANUP => 1);
+        if (my $upload = $c->req->('pause99_add_uri_httpupload')) {
+            $module = File::Spec->catfile($tempdir, $upload->filename);
+            File::Copy::move $upload->tempname, $module;
+            $author = $c->req->param('HIDDENNAME');
         }
+        else {
+            $module = $c->req->param('module');
+            $author = $c->req->param('author') || 'DUMMY';
+        }
+        $c->halt(404) unless ($module && $author);
+        $author = uc $author;
+
+        my $injector = OrePAN2::Injector->new(
+                directory => $self->dist_dir,
+                author    => $author,
+            );
+        $injector->inject($module);
+        OrePAN2::Indexer->new(directory => $self->dist_dir)
+            ->make_index();
+    }
+    catch {
+
+    };
 };
 
 1;
