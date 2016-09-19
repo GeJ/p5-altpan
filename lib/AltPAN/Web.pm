@@ -37,7 +37,7 @@ get '/' => [qw/set_title/] => sub {
     $c->render('index.tx', { greeting => "Hello" });
 };
 
-post '/authenquery' => sub {
+post '/authenquery' => sub { # {{{
     my ($self, $c) = @_;
 
     try {
@@ -64,9 +64,20 @@ post '/authenquery' => sub {
             ->make_index();
     }
     catch {
-
+        if (ref $_ && (ref $_ eq 'Kossy::Exception')) {
+            # Rethrow
+            die $_;
+        }
+        else {
+            $c->halt(500, $_);
+        }
     };
-};
+
+    $c->res->status(200);
+    $c->res->content_type('text/plain; charset=UTF-8');
+    $c->res->body('OK');
+    return $c->res;
+}; # }}}
 
 1;
 
