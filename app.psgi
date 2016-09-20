@@ -25,14 +25,18 @@ unless (-d $dist_dir) {
 my $app = AltPAN::Web->psgi(root_dir => $root_dir, dist_dir => $dist_dir);
 builder {
     mount '/altpan' => Plack::App::Directory->new({root => $dist_dir})->to_app;
-    mount '/' => sub {
+
+    mount '/' => builder {
         enable 'ReverseProxy';
+
         enable 'Static',
             path => qr!^/(?:(?:css|fonts|js)/|favicon\.ico$)!,
             root => $root_dir . '/public';
-	enable match_if (path(qr{^/authenquery$}) && method('POST')),
+
+	enable match_if all( path(qr{^/authenquery$}), method('POST') ),
             'Plack::Middleware::Auth::Basic',
                 authenticator => Authen::Simple::Passwd->new(path => $auth_file);
+
         $app;
     };
 };
