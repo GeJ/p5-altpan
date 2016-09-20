@@ -43,7 +43,7 @@ post '/authenquery' => sub { # {{{
     try {
         my ($module, $author);
         my $tempdir = File::Temp::tempdir(CLEANUP => 1);
-        if (my $upload = $c->req->('pause99_add_uri_httpupload')) {
+        if (my $upload = $c->req->upload('pause99_add_uri_httpupload')) {
             $module = File::Spec->catfile($tempdir, $upload->filename);
             File::Copy::move $upload->tempname, $module;
             $author = $c->req->param('HIDDENNAME');
@@ -64,6 +64,8 @@ post '/authenquery' => sub { # {{{
             ->make_index();
     }
     catch {
+        warn $_;
+
         if (ref $_ && (ref $_ eq 'Kossy::Exception')) {
             # Rethrow
             die $_;
