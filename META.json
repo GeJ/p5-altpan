@@ -47,12 +47,30 @@
       },
       "runtime" : {
          "requires" : {
+            "Authen::Simple::Passwd" : "0.6",
+            "File::Spec" : "3.62",
+            "File::Temp" : "0.2304",
             "Kossy" : "0.40",
-            "perl" : "5.008001"
+            "OrePAN2" : "0.44",
+            "Plack" : "1.0039",
+            "Plack::Builder::Conditionals" : "0.05",
+            "Try::Tiny" : "0.27",
+            "perl" : "5.010001"
          }
       }
    },
    "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/GeJ/p5-altpan/issues"
+      },
+      "homepage" : "https://github.com/GeJ/p5-altpan",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/GeJ/p5-altpan.git",
+         "web" : "https://github.com/GeJ/p5-altpan"
+      }
+   },
    "version" : "0.001",
    "x_serialization_backend" : "JSON::PP version 2.27400"
 }
