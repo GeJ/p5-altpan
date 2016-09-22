@@ -1,4 +1,4 @@
-name = "altpan"
+name = "AltPAN"
 # badges = ["travis"]
 module_maker="ModuleBuildTiny"
 
