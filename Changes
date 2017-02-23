@@ -2,6 +2,10 @@ Revision history for Perl extension altpan
 
 {{$NEXT}}
 
+0.003 2017-02-23T22:30:55Z
+
+    - Minor changes to match Server::Starter latest release.
+
 0.002 2016-09-22T01:07:06Z
 
     - Properly rename the project in Minilla
