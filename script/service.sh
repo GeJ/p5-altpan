@@ -30,13 +30,13 @@ SERVER_OPTS="--dir=${BASEDIR} --signal-on-hup=QUIT --pid-file=${RUNDIR}/${MY_APP
 
 ss_start () {
     ${SERVER_CMD} ${SERVER_OPTS} \
-        --port=${MY_HOST_PORT} --daemonize --enable-auto-restart=1 -- \
+        --port=${MY_HOST_PORT} --daemonize --enable-auto-restart -- \
         starman --listen ${MY_HOST_PORT} app.psgi
 }
 
 ss_restart () {
     ${SERVER_CMD} ${SERVER_OPTS} \
-        --port=${MY_HOST_PORT} --daemonize --enable-auto-restart=1 --restart
+        --port=${MY_HOST_PORT} --daemonize --enable-auto-restart --restart
 }
 
 ss_stop () {

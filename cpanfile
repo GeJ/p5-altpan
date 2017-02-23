@@ -7,6 +7,7 @@ requires 'Kossy',                        '0.40';
 requires 'OrePAN2',                      '0.44';
 requires 'Plack',                        '1.0039';
 requires 'Plack::Builder::Conditionals', '0.05';
+requires 'Server::Starter',              '0.33';
 requires 'Try::Tiny',                    '0.27';
 
 on build => sub {
